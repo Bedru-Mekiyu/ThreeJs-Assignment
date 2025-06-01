@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive 3D Product Viewer</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.134.0/examples/js/controls/OrbitControls.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-900 flex items-center justify-center min-h-screen">
+  <div class="relative w-full max-w-4xl">
+    <canvas id="three-canvas" class="w-full h-[600px] rounded-lg shadow-lg"></canvas>
+    <div id="info-panel" class="absolute top-4 left-4 bg-gray-800 text-white p-4 rounded-lg opacity-0 transition-opacity duration-300"></div>
+  </div>
+  <script type="module">
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      const { initScene } = await import('./src/initScene.js');
+      const { createProduct } = await import('./src/createProduct.js');
+      const { addLighting } = await import('./src/addLighting.js');
+      const { setupInteraction } = await import('./src/interaction.js');
+      const { setupCameraAnimation } = await import('./src/cameraAnimation.js');
+
+      const { scene, camera, renderer, controls } = initScene();
+      const product = createProduct();
+      scene.add(product);
+      addLighting(scene);
+      setupInteraction(scene, camera, renderer, product);
+      setupCameraAnimation(camera, controls);
+
+      function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+      }
+      animate();
+    } catch (error) {
+      console.error('Error initializing Three.js scene:', error);
+    }
+  });
+</script>
+
+
+</body>
+</html>

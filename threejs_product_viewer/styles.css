@@ -1,0 +1,7 @@
+
+#three-canvas {
+  display: block;
+}
+#info-panel {
+  pointer-events: none;
+}
